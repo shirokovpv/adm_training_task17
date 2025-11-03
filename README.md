@@ -124,4 +124,29 @@
 <img width="1840" height="994" alt="image" src="https://github.com/user-attachments/assets/fb013811-d066-47ec-839e-05cc7fdbc367" />
 </span></p>
 <p><span style="font-weight: 300;">Теперь есть и лог ошибок.</span></p>
-
+<p><span style="font-weight: 300;">Аналогично в каталоге task17_1 с помощью Vagrant создадим третью ВМ с именем <strong>new</strong>. Не знаю, надо ли прикреплять сюда этот Vagrant-файл - он идентичен предыдущему, только там одна ВМ с именем <strong>new</strong> и IP <strong>192.168.56.20</strong></span></p>
+<img width="1096" height="338" alt="image" src="https://github.com/user-attachments/assets/cc18d3da-0de0-4e4f-b541-e4308c7e1cb2" />
+</span></p>
+<p><span style="font-weight: 300;">Зайдем на нее по ssh и перейдем в root-пользователя. Rsyslog уже установлен и запущен. </p>
+<img width="802" height="482" alt="image" src="https://github.com/user-attachments/assets/6dca92c2-0fcc-4984-bbd0-d4afcf535897" />
+</span></p>
+<p>Нужно настроить отправку всех логов на сервер. Создаем конфигурационный файл для rsyslog:</p>
+<p><code>nano /etc/rsyslog.d/all.conf</code></p>
+<p>Добавляем:</p>
+<p><code>*.* @@192.168.56.15:514</code></p>
+<p><em>* где <strong>192.168.56.15</strong>&nbsp;&mdash;&nbsp; IP-адрес нашего сервера логов,&nbsp;<strong>*.*</strong>&nbsp;&mdash; перенаправлять любой лог.</em></p>
+<p>Перезапускаем rsyslog:</p>
+<p><code>systemctl restart rsyslog</code></p>
+<p>Заходим по ssh на ВМ <strong>log</strong> и видим, что в каталоге /var/log/rsyslog/ появился каталог new:</p>
+<img width="514" height="184" alt="image" src="https://github.com/user-attachments/assets/503abbf3-5e1c-4085-ad93-9db5db040b07" />
+</span></p>
+<p>Смотрим его содержимое:</p>
+<img width="583" height="205" alt="image" src="https://github.com/user-attachments/assets/57c2c93c-d550-4058-b006-b39abf9c3c13" />
+</span></p>
+<p>Видим там четыре лог-файла с машины <strong>new</strong>. Просмотрим systemd.log:</p>
+<img width="809" height="397" alt="image" src="https://github.com/user-attachments/assets/818bfff8-425a-4018-8620-8c3e49f9f09e" />
+</span></p>
+<p>Забыли отсинхронизировать время на машине <strong>new</strong>. Делаем это и снова смотрим:</p>
+<img width="809" height="397" alt="image" src="https://github.com/user-attachments/assets/a9d73f51-3639-4290-9964-d6b47226d78f" />
+</span></p>
+<p>Теперь правильное время. Задание завершено.</p>
