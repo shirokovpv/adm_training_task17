@@ -82,7 +82,15 @@
 <p><code>$template RemoteLogs,"/var/log/rsyslog/%HOSTNAME%/%PROGRAMNAME%.log" *.* ?RemoteLogs &amp; ~</code></p>
 <img width="894" height="87" alt="image" src="https://github.com/user-attachments/assets/a630b2b3-7c0c-43c7-9f07-16a06793d3a9" />
 </span></p>
-
+<p><span style="font-weight: 300;">Далее сохраняем файл и перезапускаем службу rsyslog: <code>systemctl restart rsyslog</code></p>
+<p><span style="font-weight: 300;">Если ошибок не допущено, то у нас будут видны открытые порты TCP,UDP 514:</p>
+<img width="1271" height="269" alt="image" src="https://github.com/user-attachments/assets/940059e6-48d5-4132-8c8c-7c460d226ed6" />
+</span></p>
+<p><span style="font-weight: 300;">Далее настроим отправку логов с web-сервера</span></p>
+<p><span style="font-weight: 300;">Заходим на web-сервер и переходим в root-пользователя</span></p>
+<p><span style="font-weight: 300;">Проверим версию nginx: <code>nginx -v</code></p>
+<img width="392" height="70" alt="image" src="https://github.com/user-attachments/assets/96583ff5-8614-4b71-a9d0-19f4656918be" />
+</span></p>
 
 
 
