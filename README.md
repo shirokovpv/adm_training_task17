@@ -79,8 +79,10 @@
 </span></p>
 <p><span style="font-weight: 300;">В конец файла /etc/rsyslog.conf добавляем правила приёма сообщений от хостов:</span></p>
 <p><code>#Add remote logs</code></p>
-<p><code>$template RemoteLogs,"/var/log/rsyslog/%HOSTNAME%/%PROGRAMNAME%.log" *.* ?RemoteLogs &amp; ~</code></p>
-<img width="894" height="87" alt="image" src="https://github.com/user-attachments/assets/a630b2b3-7c0c-43c7-9f07-16a06793d3a9" />
+<p><code>$template RemoteLogs,"/var/log/rsyslog/%HOSTNAME%/%PROGRAMNAME%.log"
+*.* ?RemoteLogs
+& ~</code></p>
+<img width="698" height="125" alt="image" src="https://github.com/user-attachments/assets/5532530d-ede0-46d3-8026-d751a6060fbf" />
 </span></p>
 <p><span style="font-weight: 300;">Далее сохраняем файл и перезапускаем службу rsyslog: <code>systemctl restart rsyslog</code></p>
 <p><span style="font-weight: 300;">Если ошибок не допущено, то у нас будут видны открытые порты TCP,UDP 514:</p>
@@ -91,10 +93,22 @@
 <p><span style="font-weight: 300;">Проверим версию nginx: <code>nginx -v</code></p>
 <img width="392" height="70" alt="image" src="https://github.com/user-attachments/assets/96583ff5-8614-4b71-a9d0-19f4656918be" />
 </span></p>
-
-
-
-
-
-
-
+<p><span style="font-weight: 300;">Rsyslog также должен быть установлен в этой ОС. Если нет, установим и включим.</span></p>
+<p><code>apt install rsyslog</code></p>
+<p><code>systemctl enable rsyslog</code></p>
+<p><code>systemctl start rsyslog</code></p>
+<p><span style="font-weight: 300;">Находим в файле /etc/nginx/nginx.conf раздел с логами и приводим их к следующему виду:</span></p>
+<p>error_log /var/log/nginx/error.log;</p>
+<p>error_log syslog:server=192.168.56.15:514,tag=nginx_error;</p>
+<p>access_log syslog:server=192.168.56.15:514,tag=nginx_access,severity=info combined;</p>
+<p><span style="font-weight: 300;">Далее проверяем, что конфигурация nginx указана правильно: <code>nginx -t</code></p>
+<img width="698" height="111" alt="image" src="https://github.com/user-attachments/assets/9b8b99a8-4d5e-4bf4-9dbf-4123f6ff4398" />
+</span></p>
+<p><span style="font-weight: 300;">Перезапускаем nginx: <code>systemctl restart nginx</code></p>
+<p><span style="font-weight: 300;">Попробуем несколько раз зайти по адресу </span><span style="font-weight: 300;"><a href="http://192.168.56.10">http://192.168.56.10</a></span></p>
+<p><span style="font-weight: 300;">Далее заходим на log-сервер и смотрим информацию об nginx:</span></p>
+<p><code>cat /var/log/rsyslog/web/nginx_access.log</code></p>
+<p><code>cat /var/log/rsyslog/web/nginx_error.log</code></p>
+<img width="1310" height="364" alt="image" src="https://github.com/user-attachments/assets/759eedbd-e4cf-45b1-9755-7a7400e98598" />
+</span></p>
+<p><span style="font-weight: 300;">Лог доступа, как видим, есть. Лога ошибок нет.</span></p>
