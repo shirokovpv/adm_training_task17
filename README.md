@@ -112,3 +112,16 @@
 <img width="1310" height="364" alt="image" src="https://github.com/user-attachments/assets/759eedbd-e4cf-45b1-9755-7a7400e98598" />
 </span></p>
 <p><span style="font-weight: 300;">Лог доступа, как видим, есть. Лога ошибок нет.</span></p>
+<p>Чтобы сгенерировать ошибку, можно переместить файл веб-страницы, который открывает nginx -</p>
+<p><code>mv /var/www/html/index.nginx-debian.html /var/www/</code></p>
+<p><code>systemctl restart nginx</code></p>
+<img width="682" height="77" alt="image" src="https://github.com/user-attachments/assets/84d4d1aa-e45f-4654-951b-d7b727e8b432" />
+</span></p>
+<p><span style="font-weight: 300;">Снова попробуем несколько раз зайти по адресу </span><span style="font-weight: 300;"><a href="http://192.168.56.10">http://192.168.56.10</a></span></p>
+<p>В браузере покажет 403 Forbidden. Смотрим логи еще раз:</p>
+<p><code>cat /var/log/rsyslog/web/nginx_access.log</code></p>
+<p><code>cat /var/log/rsyslog/web/nginx_error.log</code></p>
+<img width="1840" height="994" alt="image" src="https://github.com/user-attachments/assets/fb013811-d066-47ec-839e-05cc7fdbc367" />
+</span></p>
+<p><span style="font-weight: 300;">Теперь есть и лог ошибок.</span></p>
+
