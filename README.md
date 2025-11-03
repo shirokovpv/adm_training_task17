@@ -31,10 +31,61 @@
 <p>И изменить box_name и box_version (как в репозитории, если туда зайти).</p>
 <img width="480" height="306" alt="image" src="https://github.com/user-attachments/assets/c34c2b46-a072-4edd-8ae6-6f0c8d26cde8" />
 <p>******************************</p>
-<p><span style="font-weight: 400;">Создадим каталог task17, а в нем Vagrantfile (взятый из методички и измененный в соответствии с нашим обходным решением), в котором будут указаны параметры нашей ВМ. Измененный Vagrant-файл прикладываю сюда.</span></p>
+<p><span style="font-weight: 400;">Создадим каталог task17, а в нем Vagrantfile (взятый из методички и измененный в соответствии с нашим обходным решением), в котором будут указаны параметры наших ВМ. Измененный Vagrant-файл прикладываю сюда.</span></p>
 <img width="616" height="666" alt="image" src="https://github.com/user-attachments/assets/412b92a7-d421-4324-941f-1ab463b2d03f" />
 <p>&nbsp;</p>
-<p><span style="font-weight: 300;">После создания Vagrantfile запустим нашу ВМ командой <code>vagrant up</code>. Будет создано две виртуальных машины <strong>web</strong> и <strong>log</strong>.</span></p>
+<p><span style="font-weight: 300;">После создания Vagrantfile запустим команду <code>vagrant up</code>. Будет создано две ВМ <strong>web</strong> и <strong>log</strong>. Можно увидеть их в VirtualBox.</span></p>
+<img width="1091" height="259" alt="image" src="https://github.com/user-attachments/assets/ae91f375-5a11-4484-af80-0a9b4f4910f5" />
+<p>&nbsp;</p>
+<p><span style="font-weight: 300;">Заходим на web-сервер <code>vagrant ssh web</code> и переходим в root-пользователя <code>sudo -i</code></span></p>
+<img width="789" height="478" alt="image" src="https://github.com/user-attachments/assets/e371f41e-6767-416f-b317-7102a8104a30" />
+<p>&nbsp;</p>
+<p><span style="font-weight: 300;">Проверяем настройки даты и времени <code>timedatectl</code></span></p>
+<img width="789" height="205" alt="image" src="https://github.com/user-attachments/assets/23e21c39-7bea-40ee-ac22-c66d4bbaf5f4" />
+<p>&nbsp;</p>
+<p><span style="font-weight: 300;">Время и часовой пояс не совпадает с хостом. Нужно настроить синхронизацию времени. Проверим, какая утилита используется:</span></p>
+<p><span style="font-weight: 300;"><code>systemctl status ntp</code></span></p>
+<p><span style="font-weight: 300;"><code>systemctl status chronyd</code></span></p>
+<p><span style="font-weight: 300;"><code>systemctl status systemd-timesyncd</code></span></p>
+<img width="807" height="249" alt="image" src="https://github.com/user-attachments/assets/0c56a5c6-994d-4540-9f5e-0295d01709f2" />
+<p>&nbsp;</p>
+<p><span style="font-weight: 300;">Есть сервис systemd-timesyncd. Включим его:</span></p>
+<p><code>timedatectl set-ntp true</code></p>
+<p><code>timedatectl set-timezone Europe/Moscow</code></p>
+<p><code>systemctl start systemd-timesyncd</code></p>
+<p><code>timedatectl</code></p>
+<img width="807" height="249" alt="image" src="https://github.com/user-attachments/assets/1480503a-f1e2-4159-ae0e-fd415f25168f" />
+<p>&nbsp;</p>
+<p><span style="font-weight: 300;">Аналогично включим синхронизацию времени на ВМ <strong>log</strong>.</span></p>
+<img width="640" height="291" alt="image" src="https://github.com/user-attachments/assets/41da47e4-d7a8-4012-b41d-39163a488762" />
+<p>&nbsp;</p>
+<p><span style="font-weight: 300;">На ВМ <strong>web</strong> установим nginx:</span></p>
+<p><code>apt update &amp;&amp; apt install -y nginx</code></p>
+<p><span style="font-weight: 300;">Проверим, что nginx работает корректно:</span></p>
+<p><code>systemctl status nginx</code></p>
+<img width="810" height="426" alt="image" src="https://github.com/user-attachments/assets/d90f2142-813e-4456-9efe-d2610e9f65a2" />
+<p>&nbsp;</p>
+<p><span style="font-weight: 300;">Заходим на ВМ <strong>log</strong> <code>vagrant ssh log</code> и переходим в root-пользователя <code>sudo -i</code></span></p>
+<img width="810" height="489" alt="image" src="https://github.com/user-attachments/assets/50ab09e1-c3a3-4965-bad0-7d31e5fc8406" />
+<p>&nbsp;</p>
+<p><span style="font-weight: 300;">Rsyslog должен быть установлен по умолчанию в нашей ОС, проверим это:</span></p>
+<p><code>apt list rsyslog</code></p>
+<img width="810" height="97" alt="image" src="https://github.com/user-attachments/assets/46c2f066-e467-4bb1-b71a-18b68b54aea8" />
+<p>&nbsp;</p>
+<p><span style="font-weight: 300;">Все настройки Rsyslog хранятся в файле /</span><em><span style="font-weight: 300;">etc</span></em><span style="font-weight: 300;">/rsyslog.conf&nbsp;</span></p>
+<p><span style="font-weight: 300;">Для того, чтобы наш сервер мог принимать логи, нам необходимо внести следующие изменения в файл:&nbsp;</span></p>
+<p><span style="font-weight: 300;">Раскомментируем строки для порта 514 (TCP и UDP)</span></p>
+<img width="446" height="165" alt="image" src="https://github.com/user-attachments/assets/92025896-984c-4fc4-8ced-e25d3fe5e574" />
+</span></p>
+<p><span style="font-weight: 300;">В конец файла /etc/rsyslog.conf добавляем правила приёма сообщений от хостов:</span></p>
+<p><code>#Add remote logs</code></p>
+<p><code>$template RemoteLogs,"/var/log/rsyslog/%HOSTNAME%/%PROGRAMNAME%.log" *.* ?RemoteLogs &amp; ~</code></p>
+<img width="894" height="87" alt="image" src="https://github.com/user-attachments/assets/a630b2b3-7c0c-43c7-9f07-16a06793d3a9" />
+</span></p>
+
+
+
+
 
 
 
